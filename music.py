@@ -202,4 +202,21 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
 
-    app
+    app.add_handler(ConversationHandler(
+        entry_points=[CallbackQueryHandler(button)],
+        states={
+            SET_PASSWORD: [MessageHandler(filters.TEXT, set_pass)],
+            CONFIRM_PASSWORD: [MessageHandler(filters.TEXT, confirm_pass)],
+            ENTER_PASSWORD_VIEW: [MessageHandler(filters.TEXT, check_pass)]
+        },
+        fallbacks=[]
+    ))
+
+    app.add_handler(MessageHandler(filters.TEXT & filters.Regex(r"^/\w+\s+.+"), folder_song))
+
+    print("Bot running...")
+    app.run_polling()
+
+
+if __name__ == "__main__":
+    main()
